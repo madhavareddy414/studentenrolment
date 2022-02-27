@@ -216,3 +216,4 @@ class StudentDetailView(APIView):
         q = Student.objects.get(id=pk)
         serializer = StudentSerializer(q)
         return Response(serializer.data)
+
