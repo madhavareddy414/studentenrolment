@@ -18,5 +18,7 @@ urlpatterns = [
     path('profile/',views.profile,name='profile'),
     path('register/',views.register,name='register'),
     path('data/',views.StudentListView.as_view())
+    path('postdata/', views.StudentPostData.as_view()),
+    path('data/<str:pk>/', views.StudentDetailView.as_view())
 
 ]
