@@ -195,9 +195,26 @@ class JsonCBV(View):
 
 from rest_framework.views import APIView
 from register.serializers import StudentSerializer
+from rest_framework import status
 
 class StudentListView(APIView):
     def get(self,requst):
         q = Student.objects.all()
         serializer = StudentSerializer(q,many=True)
         return Response(serializer.data)
+class StudentPostData(APIView):
+    def post(self,request):
+        data = request.data
+        serializer = StudentSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response('Data posted successfully')
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class StudentDetailView(APIView):
+    def get(self,request,pk):
+        q = Student.objects.get(id=pk)
+        serializer = StudentSerializer(q)
+        return Response(serializer.data)
+  
+   
+
