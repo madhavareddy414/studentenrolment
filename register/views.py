@@ -196,6 +196,7 @@ class JsonCBV(View):
 from rest_framework.views import APIView
 from register.serializers import StudentSerializer
 from rest_framework import status
+from rest_framework.generics import CreateAPIView,RetrieveUpdateDestroyAPIView
 
 class StudentListView(APIView):
     def get(self,requst):
@@ -203,7 +204,8 @@ class StudentListView(APIView):
         serializer = StudentSerializer(q,many=True)
         return Response(serializer.data)
 
-class StudentPostData(APIView):
+class StudentPostData(CreateAPIView):
+    serializer_class = StudentSerializer # to get parameters in post method we have to mention serializer class
     def post(self,request):
         data = request.data
         serializer = StudentSerializer(data=data)
@@ -211,9 +213,34 @@ class StudentPostData(APIView):
             serializer.save()
             return Response('Data posted successfully')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-class StudentDetailView(APIView):
+class StudentDetailView(RetrieveUpdateDestroyAPIView):
+    serializer_class = StudentSerializer
+
     def get(self,request,pk):
-        q = Student.objects.get(id=pk)
-        serializer = StudentSerializer(q)
-        return Response(serializer.data)
+        try:
+            q = Student.objects.get(id=pk)
+            serializer = StudentSerializer(q)
+            return Response(serializer.data)
+        except Student.DoesNotExist:
+            return Response('Student Details does not exist')
+
+    def put(self,request,pk):
+        try:
+            q = Student.objects.get(id=pk)
+            serializer = StudentSerializer(q,partial=True,data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response('Data Updated Successfully')
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Student.DoesNotExist:
+            return Response('Student Details does not exist')
+    def delete(self,request,pk):
+        try:
+            q= Student.objects.get(id=pk)
+            q.delete()
+            return Response('Student data deleted successfully')
+        except Student.DoesNotExist:
+            return Response('Student Details does not exist')
+
+
 

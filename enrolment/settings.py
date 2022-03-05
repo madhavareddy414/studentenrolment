@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'register',
     'crispy_forms',
-    'rest_framework'
+    'rest_framework',
+    'drf_yasg'
 
 ]
 
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'enrolment.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_URL],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
